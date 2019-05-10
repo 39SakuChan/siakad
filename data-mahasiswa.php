@@ -1,6 +1,25 @@
 <?php 
   include "php/koneksi.php";
-  $query = $koneksi->query('SELECT id_pendaftar, nama, pilihan_prodi_1, pilihan_prodi_2, pilihan_prodi_3 FROM pendaftar');
+  $query = $koneksi->query("SELECT
+  a.id_pendaftar AS id,
+  a.nama AS nama,
+  b1.nm_jurusan AS jurusan1,
+  b2.nm_jurusan AS jurusan2,
+  b3.nm_jurusan AS jurusan3
+FROM
+  pendaftar a
+  JOIN jurusan b1
+    ON b1.id_jurusan = a.id_jurusan1
+  JOIN jurusan b2
+    ON b2.id_jurusan = a.id_jurusan2
+  JOIN jurusan b3
+    ON b3.id_jurusan = a.id_jurusan3
+    WHERE id_pendaftar NOT IN 
+  (SELECT
+    id_pendaftar
+  FROM
+    `penilaian_seleksi`) order by length(id_pendaftar), id_pendaftar asc");
+  $no = 1;
 ?>
 
 <!DOCTYPE html>
@@ -123,6 +142,7 @@
                     <thead>
                       <tr>
                         <th>No</th>
+                        <th>ID</th>
                         <th>Nama</th>
                         <th>Pilihan 1</th>
                         <th>Pilihan 2</th>
@@ -133,13 +153,14 @@
                     <tbody>
                       <?php while($result = $query->fetch_assoc()){ ?>
                         <tr>
-                          <td><?=$result['id_pendaftar'] ?></td>
+                          <td><?= $no++; ?></td>
+                          <td><?=$result['id'] ?></td>
                           <td><?=$result['nama'] ?></td>
-                          <td><?=$result['pilihan_prodi_1'] ?></td>
-                          <td><?=$result['pilihan_prodi_2'] ?></td>
-                          <td><?=$result['pilihan_prodi_3'] ?></td>
+                          <td><?=$result['jurusan1'] ?></td>
+                          <td><?=$result['jurusan2'] ?></td>
+                          <td><?=$result['jurusan3'] ?></td>
                           <td>
-                            <a href='#' data-toggle='modal' data-target='#modalinput' onclick='isi("<?= $result['id_pendaftar'] ?>")'> <small class='label label-primary'> input </small> </a>
+                            <a href='#' data-toggle='modal' data-target='#modalinput' onclick='isi("<?= $result['id'] ?>")'> <small class='label label-primary'> input </small> </a>
                           </td>
                         </tr>
                       <?php } ?>
