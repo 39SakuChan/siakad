@@ -1,6 +1,7 @@
 <?php 
   include "php/koneksi.php";
   $query = $koneksi->query("SELECT NIM, pendaftar.nama, nilai_ujian, penilaian_seleksi.jurusan, status, tgl_lulus FROM penilaian_seleksi, pendaftar WHERE penilaian_seleksi.id_pendaftar = pendaftar.id_pendaftar");
+  $no = 1;
  ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -121,6 +122,7 @@
                   <table class="table table-striped table-bordered table-hover" id="table-daftar-mhs">
                     <thead>
                       <tr>
+                        <th>No</th>
                         <th>NIM</th>
                         <th>Nama</th>
                         <th>Nilai</th>
@@ -133,6 +135,7 @@
                     <tbody>
                       <?php while($result = $query->fetch_assoc()) { ?>
                         <tr>
+                          <td><?= $no++; ?></td>
                           <td><?= $result['NIM'] ?></td>
                           <td><?= $result['nama'] ?></td>
                           <td><?= $result['nilai_ujian'] ?></td>
